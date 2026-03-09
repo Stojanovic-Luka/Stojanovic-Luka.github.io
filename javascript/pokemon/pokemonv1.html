@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+<h1>Pokèmon Item List</h1>
+    </header>
+    <section>
+
+    </section>
+    <script>
+async function populate() {
+    const requestURL =
+        "https://raw.githubusercontent.com/fanzeyi/pokemon.json/refs/heads/master/items.json";
+
+    const response = await fetch(requestURL);
+    const items = await response.json();
+
+    populatePoke(items);
+}
+
+function populatePoke(items) {
+    const section = document.querySelector("section");
+    const myArticle = document.createElement("article");
+    const myList = document.createElement("ul");
+
+    for (const item of items) {
+        const listItem = document.createElement("li");
+        listItem.textContent = `ID: ${item.id} - Name: ${item.name.english}`;
+        myList.appendChild(listItem);
+    }
+
+    myArticle.appendChild(myList);
+    section.appendChild(myArticle);
+}
+
+populate();
+          </script>
+</body>
+<link href="style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="code.js"></script>
+
+</html>

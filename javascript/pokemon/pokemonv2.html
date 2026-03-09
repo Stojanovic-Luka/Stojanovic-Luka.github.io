@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Pokémon Item List</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: rgb(190,190,190);
+      width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    section article {
+      background: white;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    img {
+      width: 60px;
+      height: 60px;
+    }
+  </style>
+</head>
+<body>
+
+  <header></header>
+  <section></section>
+
+  <script>
+    async function populate() {
+      const requestURL =
+        "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/pokedex.json";
+
+      const response = await fetch(requestURL);
+      const pokemons = await response.json();
+
+      populateHeader();
+      populatePokemons(pokemons);
+    }
+
+    function populateHeader() {
+      const header = document.querySelector("header");
+
+      const h1 = document.createElement("h1");
+      h1.textContent = "Pokémon Item List";
+
+      header.appendChild(h1);
+    }
+
+    function populatePokemons(pokemons) {
+      const section = document.querySelector("section");
+
+      for (const pokemon of pokemons) {
+        const article = document.createElement("article");
+
+        const img = document.createElement("img");
+        img.src = pokemon.image.thumbnail;
+        img.alt = pokemon.name.english;
+
+        const p = document.createElement("p");
+        p.textContent = `${pokemon.id}: ${pokemon.name.english}`;
+
+        article.appendChild(img);
+        article.appendChild(p);
+        section.appendChild(article);
+      }
+    }
+
+    populate();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Image gallery example</h1>
+
+<div class="full-img">
+  <img
+    class="displayed-img"
+    src="https://mdn.github.io/shared-assets/images/examples/learn/gallery/pic1.jpg"
+    alt="Closeup of a human eye" />
+  <div class="overlay"></div>
+  <button class="dark">Darken</button>
+</div>
+
+<div class="thumb-bar"></div>
+    
+</body>
+<style>
+
+    body {
+  font-family: sans-serif;
+  width: 640px;
+  margin: 0 auto;
+  background-color: rgb(255, 239, 218);
+  background-color: rgb(228, 228, 228);
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+    color: #222222;
+        font-family: Times New Roman, serif;
+    background-color: #ffffff;
+    padding: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 40px rgb(0, 0, 0);
+    font-size: 40px;
+}
+
+.full-img {
+  position: relative;
+  display: block;
+  width: 640px;
+  height: 480px;
+  margin-bottom: 2px;
+  margin: 0 auto;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 640px;
+  height: 480px;
+}
+
+button {
+  background: rgb(150 150 150 / 0.6);
+  border: 1px solid #999999;
+  position: absolute;
+  cursor: pointer;
+  top: 2px;
+  left: 2px;
+}
+
+button:hover,
+button:focus {
+  color: rgb(150 150 150 / 1);
+  background-color: black;
+}
+
+.thumb-bar {
+  display: flex;
+  gap: 2px;
+  cursor: pointer;
+  background-color: rgb(255, 239, 218);
+  flex-direction: row;
+  gap: 2px;
+  cursor: pointer;
+  position: static;
+  width: 100%;
+  max-width: 640px;
+  height: 100px;
+  margin: 0 auto;
+  justify-content: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.thumb-bar img {
+  display: block;
+  width: 100px;
+  flex: 1;
+  width: 120px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.thumb-bar img:hover,
+.thumb-bar img:focus {
+  outline: 2px solid rgb(0, 0, 0);
+}
+.caption {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 8px;
+  color: #222222;
+  
+    font-family: Times New Roman, serif;
+
+}
+.index-display {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 4px;
+  color: #222222;
+        font-family: Times New Roman, serif;
+    
+}
+
+</style>
+
+
+<script>
+const displayedImage = document.querySelector(".displayed-img");
+const thumbBar = document.querySelector(".thumb-bar");
+const btn = document.querySelector("button");
+const overlay = document.querySelector(".overlay");
+
+const images = [
+  { filename: "pic1.jpg", alt: "Closeup of a human eye" },
+  { filename: "pic2.jpg", alt: "Rock that looks like a wave" },
+  { filename: "pic3.jpg", alt: "Purple and white pansies" },
+  { filename: "pic4.jpg", alt: "Section of wall from a pharaoh's tomb" },
+  { filename: "pic5.jpg", alt: "Large moth on a leaf" },
+];
+
+const baseURL = "https://mdn.github.io/shared-assets/images/examples/learn/gallery/";
+
+for (const image of images) {
+  const newImage = document.createElement("img");
+  newImage.src = `${baseURL}${image.filename}`;
+  newImage.alt = image.alt;
+  newImage.tabIndex = "0";
+  thumbBar.appendChild(newImage);
+  newImage.addEventListener("click", updateDisplayedImage);
+  newImage.addEventListener("keydown", (e) => {
+    if (e.code === "Enter") updateDisplayedImage(e);
+  });
+}
+
+function updateDisplayedImage(e) {
+  displayedImage.src = e.target.src;
+  displayedImage.alt = e.target.alt;
+  updateCaption();
+  updateIndexDisplay();
+}
+
+btn.addEventListener("click", () => {
+  if (btn.classList.contains("dark")) {
+    btn.textContent = "Lighten";
+    overlay.style.backgroundColor = "rgb(0 0 0 / 0.5)";
+  } else {
+    btn.textContent = "Darken";
+    overlay.style.backgroundColor = "rgb(0 0 0 / 0)";
+  }
+  btn.classList.toggle("dark");
+});
+
+const caption = document.createElement("p");
+caption.className = "caption";
+document.body.appendChild(caption);
+
+const indexDisplay = document.createElement("p");
+indexDisplay.className = "index-display";
+document.body.appendChild(indexDisplay);
+
+function updateCaption() {
+  caption.textContent = displayedImage.alt || "";
+}
+
+function updateIndexDisplay() {
+  const parts = displayedImage.src.split("/");
+  const file = parts.pop();
+  const idx = images.findIndex(img => img.filename === file);
+  const pos = idx >= 0 ? idx + 1 : 1;
+  indexDisplay.textContent = `Image ${pos} of ${images.length}`;
+}
+
+thumbBar.addEventListener("click", () => {
+  updateCaption();
+  updateIndexDisplay();
+});
+
+updateCaption();
+updateIndexDisplay();
+</script>
